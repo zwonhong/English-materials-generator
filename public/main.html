@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>English Helper</title>
+    <link rel="stylesheet" href="/css/main.css" />
+    <script src="/js/main.js" defer></script>
+  </head>
+  <body>
+    <header class="site-header">
+      <div>
+        <p class="eyebrow">PRIVATE WORKSPACE</p>
+        <h1>English Helper</h1>
+      </div>
+      <form action="/logout" method="post">
+        <button class="logout-button" type="submit">로그아웃</button>
+      </form>
+    </header>
+
+    <main class="page-shell">
+      <section class="intro" aria-labelledby="project-heading">
+        <div>
+          <p class="step-label">새 프로젝트</p>
+          <h2 id="project-heading">OCR 원문 입력</h2>
+          <p>교정할 영어 OCR 원문과 필요한 경우 기존 한국어 번역을 입력하세요.</p>
+        </div>
+        <button id="resetButton" class="secondary-button" type="button">새 프로젝트 / 초기화</button>
+      </section>
+
+      <form id="projectForm" class="project-form">
+        <div class="field-group compact-field">
+          <label for="title">제목 <span aria-hidden="true">*</span></label>
+          <p id="titleHelp" class="helper-text">자료와 다운로드 파일에 사용할 제목입니다.</p>
+          <input id="title" name="title" type="text" aria-describedby="titleHelp" autocomplete="off" required />
+        </div>
+
+        <div class="field-group">
+          <label for="englishOcr">영어 OCR <span aria-hidden="true">*</span></label>
+          <p id="englishHelp" class="helper-text">교정할 영어 원문을 그대로 붙여 넣으세요.</p>
+          <textarea id="englishOcr" name="englishOcr" rows="16" aria-describedby="englishHelp" required></textarea>
+        </div>
+
+        <div class="translation-option">
+          <label class="checkbox-label" for="hasTranslation">
+            <input id="hasTranslation" name="hasTranslation" type="checkbox" />
+            <span>기존 한국어 번역 있음</span>
+          </label>
+          <p id="translationHelp" class="helper-text">
+            한국어 OCR은 선택 사항입니다. 이미 번역된 한국어 원문이 있을 때만 체크하고 입력하세요.
+          </p>
+        </div>
+
+        <div class="field-group">
+          <label for="koreanOcr">한국어 OCR</label>
+          <textarea
+            id="koreanOcr"
+            name="koreanOcr"
+            rows="12"
+            aria-describedby="translationHelp"
+            disabled
+          ></textarea>
+        </div>
+
+        <div class="form-actions">
+          <button id="generateButton" class="primary-button" type="submit">Generate</button>
+          <p id="generationStatus" class="generation-status" aria-live="polite"></p>
+        </div>
+      </form>
+
+      <section id="resultSection" class="result-section" aria-label="생성 결과" hidden>
+        <div id="resultArea" class="result-area" aria-live="polite"></div>
+        <div class="download-actions">
+          <button id="studentSummaryButton" class="download-button" type="button" disabled>
+            Student Summary PDF
+          </button>
+          <button id="teacherSummaryButton" class="download-button" type="button" disabled>
+            Teacher Summary PDF
+          </button>
+        </div>
+        <p id="downloadStatus" class="download-status" aria-live="polite"></p>
+      </section>
+    </main>
+  </body>
+</html>

@@ -1,0 +1,26 @@
+# Dependencies
+node_modules/
+
+# Environment variables
+.env
+.env.*
+!.env.example
+
+# Logs and runtime files
+logs/
+*.log
+*.pid
+
+# Test coverage
+coverage/
+
+# Generated and temporary files
+tmp/
+temp/
+*.pdf
+
+# Operating system and editor files
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/

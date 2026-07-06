@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>로그인 | English Helper</title>
+    <link rel="stylesheet" href="/css/auth.css" />
+  </head>
+  <body>
+    <main class="auth-card">
+      <p class="eyebrow">PRIVATE WORKSPACE</p>
+      <h1>English Helper</h1>
+      <p class="description">마스터 계정으로 로그인해 주세요.</p>
+
+      <form action="/login" method="post">
+        <label for="masterId">아이디</label>
+        <input id="masterId" name="masterId" type="text" autocomplete="username" required autofocus />
+
+        <label for="masterPassword">비밀번호</label>
+        <input id="masterPassword" name="masterPassword" type="password" autocomplete="current-password" required />
+
+        <button type="submit">로그인</button>
+      </form>
+    </main>
+  </body>
+</html>

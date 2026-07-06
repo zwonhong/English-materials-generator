@@ -1,0 +1,188 @@
+@page {
+  size: A4 portrait;
+  margin: 20mm 18mm;
+}
+
+:root {
+  font-family: "HamchoromDotum", "HCR Dotum", "함초롬돋움", "Nanum Gothic", sans-serif;
+  color: #172033;
+  background: #ffffff;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  background: #ffffff;
+}
+
+body {
+  font-size: 10pt;
+  line-height: 1.45;
+  print-color-adjust: exact;
+  -webkit-print-color-adjust: exact;
+}
+
+.worksheet {
+  width: 100%;
+}
+
+.document-header {
+  padding-bottom: 5mm;
+  margin-bottom: 4mm;
+  border-bottom: 1.2pt solid #1f2937;
+  text-align: center;
+}
+
+.document-type {
+  margin: 0 0 2mm;
+  color: #64748b;
+  font-family: inherit;
+  font-size: 7.5pt;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+}
+
+h1 {
+  margin: 0;
+  font-size: 16pt;
+  line-height: 1.25;
+}
+
+.content-section {
+  padding: 0 0 4mm;
+  margin: 0 0 4mm;
+  border-bottom: 0.6pt solid #cbd5e1;
+  break-inside: avoid;
+}
+
+.passage-section {
+  break-inside: auto;
+}
+
+.content-section:last-child {
+  padding-bottom: 0;
+  margin-bottom: 0;
+  border-bottom: 0;
+}
+
+h2 {
+  margin: 0 0 2mm;
+  color: #0f172a;
+  font-family: inherit;
+  font-size: 12pt;
+  line-height: 1.25;
+}
+
+p {
+  margin: 0;
+}
+
+.passage {
+  font-size: 10pt;
+  line-height: 1.5;
+  text-align: justify;
+  white-space: pre-line;
+}
+
+.key-points {
+  margin: 0;
+  padding-left: 5mm;
+}
+
+.key-points li {
+  margin: 0 0 1.2mm;
+  padding-left: 1mm;
+}
+
+.key-points li:last-child {
+  margin-bottom: 0;
+}
+
+.language-block + .language-block {
+  margin-top: 2.5mm;
+}
+
+.language-label {
+  margin-bottom: 0.7mm;
+  color: #64748b;
+  font-size: 7pt;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+}
+
+.korean-text {
+  font-size: 8pt;
+  line-height: 1.55;
+}
+
+.key-point-korean {
+  margin-top: 0.8mm;
+  color: #475569;
+}
+
+.teacher-version .key-points li {
+  margin-bottom: 2.2mm;
+}
+
+html.compact body {
+  font-size: 9.5pt;
+  line-height: 1.4;
+}
+
+html.compact .document-header {
+  padding-bottom: 4mm;
+  margin-bottom: 3mm;
+}
+
+html.compact .content-section {
+  padding-bottom: 3mm;
+  margin-bottom: 3mm;
+}
+
+html.compact .passage {
+  font-size: 9.5pt;
+  line-height: 1.42;
+}
+
+html.compact h2 {
+  margin-bottom: 1.5mm;
+  font-size: 11pt;
+}
+
+html.compact .language-block + .language-block {
+  margin-top: 2mm;
+}
+
+html.extra-compact body {
+  font-size: 9pt;
+  line-height: 1.35;
+}
+
+html.extra-compact .document-header {
+  padding-bottom: 3mm;
+  margin-bottom: 2.5mm;
+}
+
+html.extra-compact .content-section {
+  padding-bottom: 2.4mm;
+  margin-bottom: 2.4mm;
+}
+
+html.extra-compact .passage {
+  font-size: 9pt;
+  line-height: 1.36;
+}
+
+html.extra-compact h2 {
+  margin-bottom: 1.2mm;
+  font-size: 10.5pt;
+}
+
+html.extra-compact .language-block + .language-block {
+  margin-top: 1.5mm;
+}
