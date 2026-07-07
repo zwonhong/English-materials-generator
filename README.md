@@ -246,21 +246,7 @@ npm.cmd start
 운영 환경에서는 `.env`의 `NODE_ENV=production`과 충분히 긴 `SESSION_SECRET`을 사용하세요.
 
 
-## PDF 폰트 임베딩
 
-Puppeteer로 생성하는 모든 PDF는 프로젝트에 포함된 로컬 폰트를 사용합니다.
-
-폰트 위치:
-
-```text
-assets/fonts/
-├── HCRDotum.ttf
-└── HCRDotum-Bold.ttf
-```
-
-일반 텍스트는 `HCRDotum.ttf`, 굵은 텍스트는 `HCRDotum-Bold.ttf`를 사용합니다.
-
-PDF 템플릿은 Node.js에서 `path.resolve()`로 만든 절대 경로를 `file://` URL로 변환해 `@font-face`에 삽입합니다. 따라서 Render 같은 Linux 운영 환경에 한국어 폰트가 설치되어 있지 않아도 PDF의 한국어가 깨지지 않습니다.
 
 
 ## Render 배포
@@ -335,6 +321,24 @@ node src/server.js
 - `SESSION_SECRET`은 32자 이상의 충분히 긴 랜덤 문자열을 권장합니다.
 - placeholder 환경변수 값은 production에서 경고 로그를 발생시킵니다.
 - Gemini API Key와 마스터 계정 정보는 Render Environment Variables에만 입력하세요.
+
+## PDF 폰트 임베딩
+
+Puppeteer로 생성하는 모든 PDF는 프로젝트에 포함된 로컬 폰트를 사용합니다.
+
+폰트 위치:
+
+```text
+assets/fonts/
+├── HCRDotum.ttf
+└── HCRDotum-Bold.ttf
+```
+
+일반 텍스트는 `HCRDotum.ttf`, 굵은 텍스트는 `HCRDotum-Bold.ttf`를 사용합니다.
+
+PDF 템플릿은 Node.js에서 `path.resolve()`로 만든 절대 경로를 `file://` URL로 변환해 `@font-face`에 삽입합니다. 따라서 Render 같은 Linux 운영 환경에 한국어 폰트가 설치되어 있지 않아도 PDF의 한국어가 깨지지 않습니다.
+
+---
 
 ## 로컬 테스트
 
