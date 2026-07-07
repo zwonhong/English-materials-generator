@@ -1,5 +1,9 @@
 # English Helper
 
+개인용 영어 학원 업무 자동화 도구입니다. OCR로 추출한 영어 원문을 Gemini로 한 번만 처리해 검증된 JSON을 만들고, 그 JSON을 브라우저 메모리에만 보관한 뒤 여러 PDF와 OCR 교정 로그를 생성합니다.
+
+DB는 사용하지 않습니다. 회원가입도 없으며, `.env`에 설정한 마스터 계정 하나로만 로그인합니다.
+
 <p align="center">
   <img width="220" height="240" alt="image" src="https://github.com/user-attachments/assets/c79a648a-70e8-4aaa-b51d-15f80c0c310b" />
   <img width="500" height="700" alt="image" src="https://github.com/user-attachments/assets/5cf33a7a-5c46-4614-a12d-710fd0804c15" />
@@ -48,9 +52,6 @@
 
 
 
-개인용 영어 학원 업무 자동화 도구입니다. OCR로 추출한 영어 원문을 Gemini로 한 번만 처리해 검증된 JSON을 만들고, 그 JSON을 브라우저 메모리에만 보관한 뒤 여러 PDF와 OCR 교정 로그를 생성합니다.
-
-DB는 사용하지 않습니다. 회원가입도 없으며, `.env`에 설정한 마스터 계정 하나로만 로그인합니다.
 
 ## 주요 기능
 
