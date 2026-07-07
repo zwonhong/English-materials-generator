@@ -1,22 +1,8 @@
-const path = require('path');
-
 const geminiService = require('../services/gemini.service');
 const geminiResponseZodSchema = require('../validators/gemini-response.schema');
 
 const quotaWarning =
   '무료 Gemini API 한도가 모두 소진되었습니다.\n잠시 후 다시 시도하거나 API Key를 변경해 주세요.';
-
-const testPage = path.join(
-  __dirname,
-  '..',
-  '..',
-  'public',
-  'gemini-test.html',
-);
-
-function showTestPage(_request, response) {
-  response.sendFile(testPage);
-}
 
 function isQuotaError(error) {
   const status = error?.status ?? error?.code;
@@ -38,7 +24,7 @@ function formatValidationIssues(issues) {
   }));
 }
 
-async function runStructuredOutputTest(request, response) {
+async function generateProjectJson(request, response) {
   const title = String(request.body.title ?? '').trim();
   const englishOCR = String(request.body.englishOCR ?? '').trim();
   const hasTranslation = request.body.hasTranslation === true;
@@ -80,7 +66,7 @@ async function runStructuredOutputTest(request, response) {
       });
     }
 
-    console.log('[Gemini structured output test]', result.rawText);
+    console.log('[Gemini structured output]', result.rawText);
 
     return response.status(200).json({
       success: true,
@@ -94,7 +80,7 @@ async function runStructuredOutputTest(request, response) {
         ? error.message
         : 'Gemini 구조화 JSON 생성 중 알 수 없는 오류가 발생했습니다.';
 
-    console.error('[Gemini structured output test error]', message);
+    console.error('[Gemini structured output error]', message);
 
     if (isQuotaError(error)) {
       return response.status(429).json({
@@ -115,7 +101,6 @@ async function runStructuredOutputTest(request, response) {
 }
 
 module.exports = {
+  generateProjectJson,
   isQuotaError,
-  runStructuredOutputTest,
-  showTestPage,
 };

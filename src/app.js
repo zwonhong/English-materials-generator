@@ -5,7 +5,8 @@ const path = require('path');
 
 const env = require('./config/env');
 const authRoutes = require('./routes/auth.routes');
-const geminiTestRoutes = require('./routes/gemini-test.routes');
+const geminiRoutes = require('./routes/gemini.routes');
+const ocrLogRoutes = require('./routes/ocr-log.routes');
 const pdfRoutes = require('./routes/pdf.routes');
 const pageRoutes = require('./routes/page.routes');
 
@@ -37,8 +38,9 @@ app.use(
 app.use('/css', express.static(path.join(__dirname, '..', 'public', 'css')));
 app.use('/js', express.static(path.join(__dirname, '..', 'public', 'js')));
 app.use(authRoutes);
-app.use(geminiTestRoutes);
+app.use(geminiRoutes);
 app.use(pdfRoutes);
+app.use(ocrLogRoutes);
 app.use(pageRoutes);
 
 app.get('/health', (_request, response) => {

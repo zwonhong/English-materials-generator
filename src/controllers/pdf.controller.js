@@ -3,12 +3,20 @@ const path = require('path');
 
 const pdfService = require('../services/pdf.service');
 const {
+  renderEnglishKoreanLineTemplate,
+} = require('../templates/english-korean-line.template');
+const {
+  renderEnglishLineTemplate,
+} = require('../templates/english-line.template');
+const {
   renderStudentSummaryTemplate,
 } = require('../templates/student-summary.template');
 const {
   renderTeacherSummaryTemplate,
 } = require('../templates/teacher-summary.template');
 const {
+  createEnglishKoreanLineFilename,
+  createEnglishLineFilename,
   createStudentSummaryFilename,
   createTeacherSummaryFilename,
 } = require('../utils/filename');
@@ -20,45 +28,121 @@ const summaryCssPath = path.join(
   'templates',
   'student-summary.css',
 );
+const linePdfCssPath = path.join(__dirname, '..', 'templates', 'line-pdf.css');
+const englishLinePreviewPath = path.join(
+  __dirname,
+  '..',
+  '..',
+  'preview_english_line.pdf',
+);
+const englishKoreanLinePreviewPath = path.join(
+  __dirname,
+  '..',
+  '..',
+  'preview_english_korean_line.pdf',
+);
 
-async function downloadSummaryPdf(request, response, options) {
+function validatePdfRequest(request, response, koreanName) {
   const title = String(request.body.title ?? '').trim();
 
   if (!title) {
-    return response.status(400).json({
+    response.status(400).json({
       success: false,
-      error: 'PDF 제목이 없습니다. 새 프로젝트에서 제목을 입력해 주세요.',
+      error: `${koreanName} PDF 제목이 없습니다. 프로젝트 제목을 입력해 주세요.`,
     });
+    return null;
   }
 
   const validation = geminiResponseZodSchema.safeParse(request.body.data);
 
   if (!validation.success) {
-    return response.status(422).json({
+    response.status(422).json({
       success: false,
-      error: `${options.koreanName} PDF에 사용할 검증된 JSON이 없습니다.`,
+      error: `${koreanName} PDF에 사용할 검증된 JSON이 없습니다.`,
     });
+    return null;
+  }
+
+  return {
+    title,
+    data: validation.data,
+  };
+}
+
+function sendPdfDownload(response, pdfBuffer, filename, asciiFilename) {
+  response.set({
+    'Content-Type': 'application/pdf',
+    'Content-Length': pdfBuffer.length,
+    'Content-Disposition': `attachment; filename="${asciiFilename}"; filename*=UTF-8''${encodeURIComponent(filename)}`,
+    'X-Download-Filename': encodeURIComponent(filename),
+    'Cache-Control': 'no-store',
+  });
+
+  return response.status(200).send(pdfBuffer);
+}
+
+async function downloadSummaryPdf(request, response, options) {
+  const validRequest = validatePdfRequest(
+    request,
+    response,
+    `${options.koreanName} 요약`,
+  );
+
+  if (!validRequest) {
+    return undefined;
   }
 
   try {
     const styles = await fs.readFile(summaryCssPath, 'utf8');
     const html = options.renderTemplate({
-      title,
-      data: validation.data,
+      title: validRequest.title,
+      data: validRequest.data,
       styles,
     });
     const pdfBuffer = await pdfService.generatePdfBuffer(html);
-    const filename = options.createFilename(title);
+    const filename = options.createFilename(validRequest.title);
 
-    response.set({
-      'Content-Type': 'application/pdf',
-      'Content-Length': pdfBuffer.length,
-      'Content-Disposition': `attachment; filename="${options.asciiFilename}"; filename*=UTF-8''${encodeURIComponent(filename)}`,
-      'X-Download-Filename': encodeURIComponent(filename),
-      'Cache-Control': 'no-store',
+    return sendPdfDownload(
+      response,
+      pdfBuffer,
+      filename,
+      options.asciiFilename,
+    );
+  } catch (error) {
+    console.error(`[${options.logName} PDF error]`, error.message);
+
+    return response.status(500).json({
+      success: false,
+      error: `${options.koreanName} 요약 PDF를 생성하지 못했습니다. 잠시 후 다시 시도해 주세요.`,
     });
+  }
+}
 
-    return response.status(200).send(pdfBuffer);
+async function downloadLinePdf(request, response, options) {
+  const validRequest = validatePdfRequest(request, response, options.koreanName);
+
+  if (!validRequest) {
+    return undefined;
+  }
+
+  try {
+    const styles = await fs.readFile(linePdfCssPath, 'utf8');
+    const html = options.renderTemplate({
+      title: validRequest.title,
+      data: validRequest.data,
+      styles,
+    });
+    const pdfBuffer = await pdfService.generatePdfBuffer(html);
+    const filename = options.createFilename(validRequest.title);
+
+    await fs.writeFile(options.previewPath, pdfBuffer);
+
+    return sendPdfDownload(
+      response,
+      pdfBuffer,
+      filename,
+      options.asciiFilename,
+    );
   } catch (error) {
     console.error(`[${options.logName} PDF error]`, error.message);
 
@@ -71,7 +155,7 @@ async function downloadSummaryPdf(request, response, options) {
 
 function downloadStudentSummary(request, response) {
   return downloadSummaryPdf(request, response, {
-    koreanName: '학생용 요약',
+    koreanName: '학생용',
     logName: 'Student summary',
     asciiFilename: 'student-summary.pdf',
     renderTemplate: renderStudentSummaryTemplate,
@@ -81,7 +165,7 @@ function downloadStudentSummary(request, response) {
 
 function downloadTeacherSummary(request, response) {
   return downloadSummaryPdf(request, response, {
-    koreanName: '교사용 요약',
+    koreanName: '선생님용',
     logName: 'Teacher summary',
     asciiFilename: 'teacher-summary.pdf',
     renderTemplate: renderTeacherSummaryTemplate,
@@ -89,7 +173,31 @@ function downloadTeacherSummary(request, response) {
   });
 }
 
+function downloadEnglishLine(request, response) {
+  return downloadLinePdf(request, response, {
+    koreanName: '영어 한줄',
+    logName: 'English line',
+    asciiFilename: 'english-line.pdf',
+    renderTemplate: renderEnglishLineTemplate,
+    createFilename: createEnglishLineFilename,
+    previewPath: englishLinePreviewPath,
+  });
+}
+
+function downloadEnglishKoreanLine(request, response) {
+  return downloadLinePdf(request, response, {
+    koreanName: '영한 한줄',
+    logName: 'English-Korean line',
+    asciiFilename: 'english-korean-line.pdf',
+    renderTemplate: renderEnglishKoreanLineTemplate,
+    createFilename: createEnglishKoreanLineFilename,
+    previewPath: englishKoreanLinePreviewPath,
+  });
+}
+
 module.exports = {
+  downloadEnglishKoreanLine,
+  downloadEnglishLine,
   downloadStudentSummary,
   downloadTeacherSummary,
 };

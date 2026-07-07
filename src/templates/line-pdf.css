@@ -1,0 +1,141 @@
+@page {
+  size: A4 portrait;
+  margin: 20mm 18mm;
+}
+
+:root {
+  font-family: "HamchoromDotum", "HCR Dotum", "Nanum Gothic", sans-serif;
+  color: #172033;
+  background: #ffffff;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  background: #ffffff;
+}
+
+body {
+  font-size: 10pt;
+  line-height: 1.5;
+  print-color-adjust: exact;
+  -webkit-print-color-adjust: exact;
+}
+
+.line-worksheet {
+  width: 100%;
+}
+
+.line-header {
+  padding-bottom: 5mm;
+  margin-bottom: 6mm;
+  border-bottom: 1.2pt solid #1f2937;
+  text-align: center;
+}
+
+.document-type {
+  margin: 0 0 2mm;
+  color: #64748b;
+  font-size: 7.5pt;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+}
+
+h1 {
+  margin: 0;
+  color: #111827;
+  font-size: 16pt;
+  font-weight: 700;
+  line-height: 1.25;
+}
+
+.sentence-list {
+  display: grid;
+  gap: 3em;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.sentence-item {
+  display: grid;
+  grid-template-columns: 7mm 1fr;
+  column-gap: 2mm;
+  align-items: start;
+  break-inside: avoid;
+  text-align: left;
+}
+
+.sentence-number {
+  color: #334155;
+  font-size: 10pt;
+  font-weight: 700;
+  line-height: 1.5;
+  text-align: right;
+}
+
+.sentence-content {
+  min-width: 0;
+}
+
+.sentence-english,
+.sentence-korean {
+  margin: 0;
+  text-align: left;
+}
+
+.sentence-english {
+  font-size: 10pt;
+  line-height: 1.5;
+}
+
+.sentence-korean {
+  margin-top: 0.35em;
+  font-size: 8pt;
+  line-height: 1.55;
+}
+
+.english-korean-line-worksheet .sentence-list {
+  gap: 1.5em;
+}
+
+html.compact .line-header {
+  padding-bottom: 4mm;
+  margin-bottom: 5mm;
+}
+
+html.compact .sentence-list {
+  gap: 2.5em;
+}
+
+html.compact .english-korean-line-worksheet .sentence-list {
+  gap: 1.2em;
+}
+
+html.extra-compact .line-header {
+  padding-bottom: 3mm;
+  margin-bottom: 4mm;
+}
+
+html.extra-compact .sentence-list {
+  gap: 2em;
+}
+
+html.extra-compact .english-korean-line-worksheet .sentence-list {
+  gap: 1em;
+}
+
+html.extra-compact body,
+html.extra-compact .sentence-number,
+html.extra-compact .sentence-english {
+  font-size: 9.5pt;
+}
+
+html.extra-compact .sentence-korean {
+  font-size: 7.8pt;
+}

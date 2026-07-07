@@ -7,13 +7,15 @@ async function fitSummaryToPage(page) {
 
   await page.evaluate((maximumHeight) => {
     const root = document.documentElement;
-    const worksheet = document.querySelector('.worksheet');
+    const worksheet =
+      document.querySelector('.worksheet') ||
+      document.querySelector('.line-worksheet');
 
-    if (worksheet.scrollHeight > maximumHeight) {
+    if (worksheet && worksheet.scrollHeight > maximumHeight) {
       root.classList.add('compact');
     }
 
-    if (worksheet.scrollHeight > maximumHeight) {
+    if (worksheet && worksheet.scrollHeight > maximumHeight) {
       root.classList.add('extra-compact');
     }
   }, printableHeight);
@@ -23,7 +25,10 @@ async function generatePdfBuffer(html) {
   let browser;
 
   try {
-    browser = await puppeteer.launch({ headless: true });
+    browser = await puppeteer.launch({
+      headless: true,
+      args: ['--no-sandbox', '--disable-setuid-sandbox'],
+    });
     const page = await browser.newPage();
     await page.setViewport({ width: 794, height: 1123, deviceScaleFactor: 1 });
     await page.setContent(html, { waitUntil: 'load' });

@@ -18,6 +18,8 @@ coverage/
 tmp/
 temp/
 *.pdf
+!tests/fixtures/*.pdf
+preview_*.txt
 
 # Operating system and editor files
 .DS_Store

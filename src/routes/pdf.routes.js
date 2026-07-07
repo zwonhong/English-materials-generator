@@ -17,4 +17,16 @@ router.post(
   pdfController.downloadTeacherSummary,
 );
 
+router.post(
+  '/api/pdf/english-line',
+  requireAuthentication,
+  pdfController.downloadEnglishLine,
+);
+
+router.post(
+  '/api/pdf/english-korean-line',
+  requireAuthentication,
+  pdfController.downloadEnglishKoreanLine,
+);
+
 module.exports = router;

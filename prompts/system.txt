@@ -62,7 +62,7 @@ Summary
 
 Generate:
 
-- one concise English summary of 3 to 5 sentences and its accurate Korean translation
+- one concise English summary of 3 sentences and its accurate Korean translation
 - one English main idea of exactly one sentence and its accurate Korean translation
 - exactly three concise English key points and an accurate Korean translation for each
 

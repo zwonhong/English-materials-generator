@@ -1,121 +1,103 @@
 # English Helper
 
-## 프로젝트 소개
+개인용 영어 학원 업무 자동화 도구입니다. OCR로 추출한 영어 원문을 Gemini로 한 번만 처리해 검증된 JSON을 만들고, 그 JSON을 브라우저 메모리에만 보관한 뒤 여러 PDF와 OCR 교정 로그를 생성합니다.
 
-English Helper는 영어 학원 업무에서 반복되는 OCR 교정, 문장 정렬, 요약 자료 작성 및 PDF 출력을 자동화하기 위한 개인용 웹 애플리케이션입니다.
-
-한 명의 마스터 사용자만 사용하는 것을 전제로 하며, Gemini API 사용량을 최소화하면서 하나의 일관된 JSON 결과로 여러 교육 자료를 만드는 것이 목표입니다.
-
-현재는 개발 환경과 기본 Express 서버만 구성되어 있습니다. 인증, Gemini 연동, 화면 및 PDF 생성 기능은 이후 단계에서 구현됩니다.
+DB는 사용하지 않습니다. 회원가입도 없으며, `.env`에 설정한 마스터 계정 하나로만 로그인합니다.
 
 ## 주요 기능
 
-최종적으로 다음 기능을 제공합니다.
-
-- 마스터 계정 로그인 및 로그아웃
-- 영어 OCR 오류 복원
-- 기존 한국어 OCR 오류 복원 및 영문 문장과의 정렬
-- 기존 번역이 없는 경우 한국어 문장 번역 생성
-- 영어·한국어 요약, 중심 내용(Main Idea), 핵심 포인트 생성
-- 학생용 요약 PDF 생성
-- 교사용 요약 PDF 생성
-- 영어 한 줄 PDF 생성
-- 영한 한 줄 PDF 생성
-- 영어·한국어 OCR 교정 로그 생성
+- 마스터 계정 로그인 / 로그아웃
+- 영어 OCR 입력
+- 선택적 기존 한국어 OCR 입력
+- Gemini 구조화 JSON 생성
+- Zod 기반 JSON 검증
+- 브라우저 메모리 기반 결과 유지
+- 학생용 요약 PDF
+- 선생님용 요약 PDF
+- 영어 한줄 PDF
+- 영한 한줄 PDF
+- OCR 교정 로그 TXT
+- 검증 JSON 클립보드 복사
+- New Project / Reset으로 브라우저 메모리 초기화
 
 ## 기술 스택
 
-- 런타임: Node.js 20 이상
-- 백엔드: Express
-- 프런트엔드: HTML, CSS, Vanilla JavaScript
-- 생성형 AI: Gemini 2.5 Flash (`@google/genai`)
-- PDF: Puppeteer 및 HTML 템플릿
-- 환경변수: dotenv
-- 세션: express-session
-- 데이터 검증: Zod
-- 기본 보안: Helmet, express-rate-limit
-- 개발 서버: Nodemon
-- 데이터베이스: 사용하지 않음
+- Runtime: Node.js 20 이상
+- Backend: Express
+- Frontend: HTML, CSS, Vanilla JavaScript
+- Session: express-session
+- Security: helmet, express-rate-limit
+- LLM: Gemini via `@google/genai`
+- Validation: Zod
+- PDF: Puppeteer
+- Environment: dotenv
+- Database: 사용하지 않음
 
 ## 폴더 구조
 
 ```text
 teacher_auto/
 ├─ assets/
-│  └─ fonts/          # PDF에 사용할 폰트 파일
-├─ prompts/           # Gemini 시스템 프롬프트
+├─ prompts/
+│  └─ system.txt
 ├─ public/
-│  ├─ css/            # 프런트엔드 스타일
-│  └─ js/             # 브라우저 JavaScript
+│  ├─ css/
+│  │  ├─ auth.css
+│  │  └─ main.css
+│  ├─ js/
+│  │  └─ main.js
+│  ├─ login.html
+│  ├─ login-error.html
+│  └─ main.html
 ├─ src/
-│  ├─ config/         # 환경변수 및 공통 설정
-│  ├─ controllers/    # HTTP 요청과 응답 처리
-│  ├─ middleware/     # 인증 및 공통 미들웨어
-│  ├─ routes/         # 페이지 및 API 라우트
-│  ├─ services/       # Gemini, PDF 등 핵심 서비스
-│  ├─ templates/      # PDF용 HTML 템플릿
-│  ├─ utils/          # 공통 유틸리티
-│  ├─ validators/     # 입력 및 JSON 스키마 검증
-│  ├─ app.js          # Express 애플리케이션 설정
-│  └─ server.js       # 서버 실행 진입점
+│  ├─ config/
+│  │  ├─ env.js
+│  │  └─ gemini-response-schema.js
+│  ├─ controllers/
+│  │  ├─ auth.controller.js
+│  │  ├─ gemini.controller.js
+│  │  ├─ ocr-log.controller.js
+│  │  └─ pdf.controller.js
+│  ├─ middleware/
+│  │  └─ auth.js
+│  ├─ routes/
+│  │  ├─ auth.routes.js
+│  │  ├─ gemini.routes.js
+│  │  ├─ ocr-log.routes.js
+│  │  ├─ page.routes.js
+│  │  └─ pdf.routes.js
+│  ├─ services/
+│  │  ├─ gemini.service.js
+│  │  └─ pdf.service.js
+│  ├─ templates/
+│  │  ├─ english-korean-line.template.js
+│  │  ├─ english-line.template.js
+│  │  ├─ line-pdf.css
+│  │  ├─ line-pdf.template.js
+│  │  ├─ ocr-log.template.js
+│  │  ├─ student-summary.css
+│  │  ├─ student-summary.template.js
+│  │  ├─ summary-pdf.template.js
+│  │  └─ teacher-summary.template.js
+│  ├─ utils/
+│  │  └─ filename.js
+│  ├─ validators/
+│  │  └─ gemini-response.schema.js
+│  ├─ app.js
+│  └─ server.js
 ├─ tests/
-│  ├─ fixtures/       # 테스트용 샘플 데이터
-│  ├─ integration/    # 통합 테스트
-│  └─ unit/           # 단위 테스트
-├─ .env               # 실제 비밀 환경변수(커밋 금지)
-├─ .env.example       # 환경변수 작성 예시
-├─ package.json       # npm 패키지와 실행 스크립트
-├─ SPEC.md            # 프로젝트 요구사항
-└─ TASKS.md           # 단계별 구현 작업
-```
-
-## 설치 방법
-
-### 1. Node.js 확인
-
-Node.js 20 이상이 필요합니다.
-
-```bash
-node --version
-```
-
-### 2. npm 패키지 설치
-
-프로젝트 루트에서 다음 명령을 실행합니다.
-
-```bash
-npm install
-```
-
-PowerShell 실행 정책으로 `npm.ps1` 실행이 차단되는 환경에서는 다음 명령을 사용합니다.
-
-```powershell
-npm.cmd install
+│  └─ fixtures/
+├─ .env
+├─ .env.example
+├─ .gitignore
+├─ package.json
+├─ SPEC.md
+└─ TASKS.md
 ```
 
 ## 환경변수 설정
 
-### `.env.example`을 복사하여 `.env` 만들기
-
-Windows PowerShell:
-
-```powershell
-Copy-Item .env.example .env
-```
-
-Windows 명령 프롬프트:
-
-```cmd
-copy .env.example .env
-```
-
-macOS/Linux:
-
-```bash
-cp .env.example .env
-```
-
-복사한 `.env` 파일을 열어 실제 값을 입력합니다.
+프로젝트 루트에 `.env` 파일을 만들고 아래 값을 설정합니다.
 
 ```dotenv
 MASTER_ID=your_master_id
@@ -127,95 +109,144 @@ PORT=3000
 NODE_ENV=development
 ```
 
-### Gemini API Key 설정 위치
+### `.env.example`을 복사해서 `.env` 만들기
 
-Gemini API 키는 프로젝트 루트의 `.env` 파일에 설정합니다.
+PowerShell:
 
-```dotenv
-GEMINI_API_KEY=실제_Gemini_API_키
+```powershell
+Copy-Item .env.example .env
 ```
 
-클라이언트 JavaScript나 Git 저장소에는 API 키를 기록하지 않습니다.
+cmd:
 
-### 마스터 로그인 계정 설정 위치
-
-마스터 계정의 ID와 비밀번호도 프로젝트 루트의 `.env` 파일에 설정합니다.
-
-```dotenv
-MASTER_ID=실제_마스터_ID
-MASTER_PASSWORD=실제_마스터_비밀번호
+```cmd
+copy .env.example .env
 ```
 
-이 프로젝트는 한 명의 마스터 사용자만 사용하며 회원가입이나 다중 사용자 기능을 제공하지 않습니다.
+macOS/Linux:
 
-## 서버 실행 방법
+```bash
+cp .env.example .env
+```
 
-### 개발 서버 실행
+## Gemini API Key 설정 위치
 
-파일 변경 시 Nodemon이 서버를 자동으로 다시 시작합니다.
+Gemini API 키는 `.env`에 설정합니다.
+
+```dotenv
+GEMINI_API_KEY=your_real_gemini_api_key
+GEMINI_MODEL=gemini-2.5-flash
+```
+
+키는 서버에서만 읽으며 프론트엔드로 노출하지 않습니다.
+
+## 마스터 로그인 계정 설정 위치
+
+마스터 계정은 `.env`에 설정합니다.
+
+```dotenv
+MASTER_ID=your_master_id
+MASTER_PASSWORD=your_master_password
+SESSION_SECRET=replace_with_a_long_random_string
+```
+
+개인용 단일 계정 도구이므로 회원가입, 권한 역할, 비밀번호 재설정 기능은 없습니다.
+
+## 설치
+
+```bash
+npm install
+```
+
+PowerShell에서 npm 실행 정책 문제가 있으면 다음 명령을 사용합니다.
+
+```powershell
+npm.cmd install
+```
+
+## 개발 서버 실행
 
 ```bash
 npm run dev
 ```
 
-PowerShell에서 npm 실행이 차단되는 경우:
+PowerShell:
 
 ```powershell
 npm.cmd run dev
 ```
 
-### 운영 서버 실행
-
-```bash
-npm start
-```
-
-PowerShell에서 npm 실행이 차단되는 경우:
-
-```powershell
-npm.cmd start
-```
-
-별도의 `PORT`를 지정하지 않으면 서버는 기본적으로 다음 주소에서 실행됩니다.
+기본 주소:
 
 ```text
 http://localhost:3000
 ```
 
-## 로컬 테스트 방법
+## 운영 서버 실행
 
-현재 단계에서는 서버를 실행한 뒤 상태 확인 엔드포인트를 호출하여 Express 서버가 정상 작동하는지 확인할 수 있습니다.
+```bash
+npm start
+```
 
-브라우저에서 다음 주소를 엽니다.
+PowerShell:
+
+```powershell
+npm.cmd start
+```
+
+운영 환경에서는 `.env`의 `NODE_ENV=production`과 충분히 긴 `SESSION_SECRET`을 사용하세요.
+
+## 로컬 테스트
+
+서버 상태 확인:
 
 ```text
 http://localhost:3000/health
 ```
 
-또는 PowerShell에서 호출합니다.
+PowerShell:
 
 ```powershell
 Invoke-RestMethod http://localhost:3000/health
 ```
 
-정상 응답:
+기본 테스트 순서:
 
-```json
-{
-  "status": "ok"
-}
-```
+1. `npm run dev` 실행
+2. 브라우저에서 `http://localhost:3000` 접속
+3. `.env`의 마스터 계정으로 로그인
+4. 제목과 영어 OCR 입력
+5. 기존 한국어 번역이 있으면 체크 후 한국어 OCR 입력
+6. Generate 클릭
+7. 생성 완료 후 다운로드 버튼과 Copy JSON 확인
+8. New Project / Reset으로 초기화 확인
 
-전체 기능이 구현된 이후에는 로그인, OCR 입력, Gemini JSON, 각 PDF 및 OCR 로그 생성 흐름도 단계별로 테스트합니다.
+## 출력 파일
+
+- `<Title>_요약본(학생).pdf`
+- `<Title>_요약본(선생님).pdf`
+- `<Title>_영어한줄.pdf`
+- `<Title>_영한한줄.pdf`
+- `<Title>_OCR교정로그.txt`
+
+개발용 preview 파일은 프로젝트 루트에 생성될 수 있습니다.
+
+- `preview_student_summary.pdf`
+- `preview_teacher_summary.pdf`
+- `preview_english_line.pdf`
+- `preview_english_korean_line.pdf`
+- `preview_ocr_log.txt`
+
+preview 파일은 개발 확인용이며 Git에 커밋하지 않습니다.
 
 ## 주의사항
 
-- `.env`에는 로그인 정보와 Gemini API 키가 들어 있으므로 절대로 Git에 커밋하거나 외부에 공유하지 않습니다.
-- `.env.example`에는 실제 비밀값을 넣지 않고 변수 이름과 예시값만 유지합니다.
-- Gemini는 유효한 결과가 확정된 프로젝트당 한 번만 호출하는 것을 원칙으로 합니다.
-- Gemini가 잘못된 JSON을 반환하면 자동 재시도하지 않으며, 오류를 확인한 사용자가 Generate를 다시 눌러 수동으로 재시도합니다.
-- 모든 결과물은 한 번 확정된 동일 JSON을 재사용하여 일관성을 유지합니다.
-- 생성된 JSON은 브라우저 메모리에만 보관하며 서버, 파일, `localStorage`, `sessionStorage`에는 저장하지 않습니다.
-- PDF는 Gemini가 직접 생성하지 않습니다. 애플리케이션의 HTML 템플릿을 Puppeteer로 렌더링하여 생성합니다.
-- 데이터베이스는 사용하지 않습니다.
-- 이 프로젝트는 개인용 단일 마스터 계정 도구이며 공개 회원가입이나 다중 사용자 운영을 전제로 하지 않습니다.
+- `.env`는 절대로 Git에 올리면 안 됩니다.
+- `.env.example`에는 실제 비밀값을 넣지 않습니다.
+- Gemini는 한 프로젝트당 1회 호출하는 것을 원칙으로 합니다.
+- 검증된 JSON은 브라우저 메모리에만 보관합니다.
+- JSON은 서버, 파일, DB, `localStorage`, `sessionStorage`에 저장하지 않습니다.
+- PDF는 HTML 템플릿을 Puppeteer로 렌더링해 생성합니다.
+- DB는 사용하지 않습니다.
+- Gemini가 invalid JSON을 반환하면 자동 재시도하지 않고 오류를 표시합니다.
+- 사용자는 Generate를 다시 눌러 수동으로 재시도할 수 있습니다.
