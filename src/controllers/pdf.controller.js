@@ -15,6 +15,7 @@ const {
 const {
   renderTeacherSummaryTemplate,
 } = require('../templates/teacher-summary.template');
+const { applyPdfFonts } = require('../templates/pdf-fonts');
 const {
   createEnglishKoreanLineFilename,
   createEnglishLineFilename,
@@ -98,7 +99,7 @@ async function downloadSummaryPdf(request, response, options) {
   }
 
   try {
-    const styles = await fs.readFile(summaryCssPath, 'utf8');
+    const styles = applyPdfFonts(await fs.readFile(summaryCssPath, 'utf8'));
     const html = options.renderTemplate({
       title: validRequest.title,
       data: validRequest.data,
@@ -131,7 +132,7 @@ async function downloadLinePdf(request, response, options) {
   }
 
   try {
-    const styles = await fs.readFile(linePdfCssPath, 'utf8');
+    const styles = applyPdfFonts(await fs.readFile(linePdfCssPath, 'utf8'));
     const html = options.renderTemplate({
       title: validRequest.title,
       data: validRequest.data,
