@@ -1,20 +1,52 @@
 # English Helper
 
-## PDF 폰트 임베딩
+<p align="center">
+  <img width="220" height="240" alt="image" src="https://github.com/user-attachments/assets/c79a648a-70e8-4aaa-b51d-15f80c0c310b" />
+  <img width="500" height="700" alt="image" src="https://github.com/user-attachments/assets/5cf33a7a-5c46-4614-a12d-710fd0804c15" />
+</p>
 
-Puppeteer로 생성하는 모든 PDF는 프로젝트에 포함된 로컬 폰트를 사용합니다.
+<table>
+<tr>
+<td align="center">
 
-폰트 위치:
+<img width="788" height="1117" alt="image" src="https://github.com/user-attachments/assets/e3f76f28-d78e-48d6-a5c6-b823ddf6455e" />
 
-```text
-assets/fonts/
-├── HCRDotum.ttf
-└── HCRDotum-Bold.ttf
-```
+**Student**
 
-일반 텍스트는 `HCRDotum.ttf`, 굵은 텍스트는 `HCRDotum-Bold.ttf`를 사용합니다.
+</td>
 
-PDF 템플릿은 Node.js에서 `path.resolve()`로 만든 절대 경로를 `file://` URL로 변환해 `@font-face`에 삽입합니다. 따라서 Render 같은 Linux 운영 환경에 한국어 폰트가 설치되어 있지 않아도 PDF의 한국어가 깨지지 않습니다.
+<td align="center">
+
+<img width="791" height="1119" alt="image" src="https://github.com/user-attachments/assets/8b8f402d-e022-47d4-be78-2d323c56c3f8" />
+
+**Teacher**
+
+</td>
+</tr>
+</table>
+
+
+<table>
+<tr>
+<td align="center">
+
+<img width="791" height="1119" alt="image" src="https://github.com/user-attachments/assets/299213d5-c8f5-4e13-824f-484fb42ffe84" />
+
+**Student**
+
+</td>
+
+<td align="center">
+
+<img width="789" height="1117" alt="image" src="https://github.com/user-attachments/assets/094a2461-3708-4134-a56c-b7e646d2d7f3" />
+
+**Teacher**
+
+</td>
+</tr>
+</table>
+
+
 
 개인용 영어 학원 업무 자동화 도구입니다. OCR로 추출한 영어 원문을 Gemini로 한 번만 처리해 검증된 JSON을 만들고, 그 JSON을 브라우저 메모리에만 보관한 뒤 여러 PDF와 OCR 교정 로그를 생성합니다.
 
@@ -211,6 +243,24 @@ npm.cmd start
 ```
 
 운영 환경에서는 `.env`의 `NODE_ENV=production`과 충분히 긴 `SESSION_SECRET`을 사용하세요.
+
+
+## PDF 폰트 임베딩
+
+Puppeteer로 생성하는 모든 PDF는 프로젝트에 포함된 로컬 폰트를 사용합니다.
+
+폰트 위치:
+
+```text
+assets/fonts/
+├── HCRDotum.ttf
+└── HCRDotum-Bold.ttf
+```
+
+일반 텍스트는 `HCRDotum.ttf`, 굵은 텍스트는 `HCRDotum-Bold.ttf`를 사용합니다.
+
+PDF 템플릿은 Node.js에서 `path.resolve()`로 만든 절대 경로를 `file://` URL로 변환해 `@font-face`에 삽입합니다. 따라서 Render 같은 Linux 운영 환경에 한국어 폰트가 설치되어 있지 않아도 PDF의 한국어가 깨지지 않습니다.
+
 
 ## Render 배포
 
