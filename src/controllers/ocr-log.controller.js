@@ -1,11 +1,16 @@
 const fs = require('fs/promises');
 const path = require('path');
 
+const env = require('../config/env');
 const { renderOcrLog } = require('../templates/ocr-log.template');
 const { createOcrLogFilename } = require('../utils/filename');
 const geminiResponseZodSchema = require('../validators/gemini-response.schema');
 
 const ocrLogPreviewPath = path.join(__dirname, '..', '..', 'preview_ocr_log.txt');
+
+function isDevelopmentPreviewEnabled() {
+  return env.nodeEnv !== 'production';
+}
 
 function validateOcrLogRequest(request, response) {
   const title = String(request.body.title ?? '').trim();
@@ -46,7 +51,11 @@ async function downloadOcrLog(request, response) {
     const logBuffer = Buffer.from(logText, 'utf8');
     const filename = createOcrLogFilename(validRequest.title);
 
-    await fs.writeFile(ocrLogPreviewPath, logText, 'utf8');
+    // Render production instances use an ephemeral filesystem.
+    // Keep preview artifacts for local development only.
+    if (isDevelopmentPreviewEnabled()) {
+      await fs.writeFile(ocrLogPreviewPath, logText, 'utf8');
+    }
 
     response.set({
       'Content-Type': 'text/plain; charset=utf-8',

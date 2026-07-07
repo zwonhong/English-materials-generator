@@ -26,6 +26,9 @@ app.use(
     secret: env.sessionSecret,
     resave: false,
     saveUninitialized: false,
+    // This private tool intentionally uses the default in-memory session store.
+    // If the app ever becomes multi-user or horizontally scaled, replace this
+    // with a persistent session store before deployment maintenance.
     cookie: {
       httpOnly: true,
       sameSite: 'lax',

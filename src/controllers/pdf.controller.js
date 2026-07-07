@@ -1,6 +1,7 @@
 const fs = require('fs/promises');
 const path = require('path');
 
+const env = require('../config/env');
 const pdfService = require('../services/pdf.service');
 const {
   renderEnglishKoreanLineTemplate,
@@ -41,6 +42,10 @@ const englishKoreanLinePreviewPath = path.join(
   '..',
   'preview_english_korean_line.pdf',
 );
+
+function isDevelopmentPreviewEnabled() {
+  return env.nodeEnv !== 'production';
+}
 
 function validatePdfRequest(request, response, koreanName) {
   const title = String(request.body.title ?? '').trim();
@@ -135,7 +140,11 @@ async function downloadLinePdf(request, response, options) {
     const pdfBuffer = await pdfService.generatePdfBuffer(html);
     const filename = options.createFilename(validRequest.title);
 
-    await fs.writeFile(options.previewPath, pdfBuffer);
+    // Render production instances use an ephemeral filesystem.
+    // Keep preview artifacts for local development only.
+    if (isDevelopmentPreviewEnabled()) {
+      await fs.writeFile(options.previewPath, pdfBuffer);
+    }
 
     return sendPdfDownload(
       response,

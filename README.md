@@ -196,6 +196,79 @@ npm.cmd start
 
 운영 환경에서는 `.env`의 `NODE_ENV=production`과 충분히 긴 `SESSION_SECRET`을 사용하세요.
 
+## Render 배포
+
+Render 공식 문서 기준으로 Node/Express 앱은 GitHub 저장소를 연결한 Web Service로 배포할 수 있습니다. Render의 Node 런타임은 운영 실행 시 `NODE_ENV=production`을 제공합니다.
+
+### GitHub repository
+
+1. 이 프로젝트를 GitHub 저장소에 push합니다.
+2. `.env`는 절대 커밋하지 않습니다.
+3. `.env.example`만 예시 파일로 유지합니다.
+4. `node_modules/`, 루트 preview 파일, 로그 파일은 Git에 올리지 않습니다.
+
+### Render deployment
+
+1. Render Dashboard에서 `New` → `Web Service`를 선택합니다.
+2. GitHub 저장소를 연결합니다.
+3. Runtime/Language는 `Node`를 선택합니다.
+4. 아래 Build Command와 Start Command를 입력합니다.
+5. Required Environment Variables를 Render의 Environment 탭에 등록합니다.
+6. 배포 후 `/health` 경로로 서버 상태를 확인합니다.
+
+### Required Environment Variables
+
+Render에 반드시 설정해야 하는 값:
+
+```dotenv
+MASTER_ID=실제_마스터_ID
+MASTER_PASSWORD=실제_마스터_비밀번호
+SESSION_SECRET=충분히_긴_랜덤_문자열
+GEMINI_API_KEY=실제_Gemini_API_Key
+GEMINI_MODEL=gemini-2.5-flash
+NODE_ENV=production
+```
+
+선택 값:
+
+PORT
+
+Render는 보통 PORT 환경변수를 자동으로 제공합니다.
+직접 설정하지 않는 것을 권장합니다.
+애플리케이션은 process.env.PORT를 우선 사용하고, 없을 경우 로컬 개발용 기본값 3000을 사용합니다.
+
+Render는 Web Service 포트를 환경변수로 제공합니다. 별도 설정이 없다면 애플리케이션은 기본값 `3000`을 사용하므로, Render에서는 `PORT`를 Render가 제공하는 값 그대로 사용하게 두거나 필요 시 서비스 설정에 맞춰 지정하세요.
+
+### Build Command
+
+```bash
+npm install
+```
+
+### Start Command
+
+```bash
+npm start
+```
+
+`npm start`는 내부적으로 다음 명령을 실행합니다.
+
+```bash
+node src/server.js
+```
+
+### Production notes
+
+- production에서는 개발용 preview PDF/TXT 파일을 생성하지 않습니다.
+- PDF/TXT 다운로드 응답은 그대로 동작합니다.
+- Puppeteer는 서버에서 PDF를 생성할 때만 실행됩니다.
+- 이 프로젝트는 DB와 영구 파일 저장소를 사용하지 않습니다.
+- 생성된 JSON은 브라우저 메모리에만 존재합니다.
+- Render의 파일 시스템은 영구 저장소로 사용하지 않는 것을 전제로 합니다.
+- `SESSION_SECRET`은 32자 이상의 충분히 긴 랜덤 문자열을 권장합니다.
+- placeholder 환경변수 값은 production에서 경고 로그를 발생시킵니다.
+- Gemini API Key와 마스터 계정 정보는 Render Environment Variables에만 입력하세요.
+
 ## 로컬 테스트
 
 서버 상태 확인:
